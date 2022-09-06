@@ -19,7 +19,12 @@ print('device: {}'.format(device))
 mesh = Mesh(opts.initial_mesh, device=device, hold_history=True)
 
 # input point cloud
-input_xyz, input_normals = utils.read_pts(opts.input_pc)
+# input_xyz, input_normals = utils.read_pts(opts.input_pc)
+
+input_xyz, input_normals = utils.read_ply_open3d(opts.input_pc)
+print(f'input_xyz = {input_xyz}, shape = {input_xyz.shape}')
+
+print(f"input_normals = {input_normals}, shape = {input_normals.shape}")
 # normalize point cloud based on initial mesh
 input_xyz /= mesh.scale
 input_xyz += mesh.translations[None, :]

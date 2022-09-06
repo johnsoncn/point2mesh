@@ -1,5 +1,10 @@
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+# print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import trimesh
 from models.layers.mesh import *
+# from pathlib import Path
 import argparse
 import pathlib
 from utils import *
@@ -7,7 +12,9 @@ import warnings
 
 
 def run(args):
-    xyz, _ = read_pts(args.i)
+    # xyz, _ = read_pts(args.i)
+
+    xyz, _ = read_ply_open3d(args.i)
 
     m = trimesh.convex.convex_hull(xyz[:, :3])
     vs, faces = m.vertices, m.faces
@@ -37,6 +44,7 @@ def check_args(args):
     if not args.i.exists():
         raise FileNotFoundError('can\' find input file')
 
+    # print(args.blender_path / 'blender')
     if args.blender:
         if not (args.blender_path / 'blender').exists():
             raise FileNotFoundError('can\' find blender')
@@ -77,6 +85,9 @@ def blender_rehull(target: Path, dest: Path, res: int, blender_path: Path):
 
 
 if __name__ == '__main__':
+
+    # python scripts/process_data/convex_hull.py --i data/modified.ply --o data/modified_initmesh.ply --face 1000
+
     base_path = os.path.dirname(os.path.abspath(__file__))
     parser = argparse.ArgumentParser(description='Convex hull maker')
     parser.add_argument('--i', type=Path, required=True,
